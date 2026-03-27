@@ -1,0 +1,87 @@
+@import url('https://fonts.googleapis.com/css2?family=Creepster&family=Roboto+Mono:wght@400;700&display=swap');
+
+body {
+    margin: 0;
+    overflow: hidden;
+    background-color: #050505;
+    font-family: 'Roboto Mono', monospace;
+    color: #eee;
+    user-select: none;
+}
+
+canvas { display: block; }
+
+#ui-layer {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 10;
+    pointer-events: none;
+}
+
+#stats {
+    font-size: 1.5rem;
+    text-shadow: 0 0 5px #00ffff;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+#lives-container {
+    font-size: 1.5rem;
+    color: #ff3333;
+    text-shadow: 0 0 10px #ff0000;
+}
+
+.overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+    text-align: center;
+}
+
+.hidden { display: none; }
+
+h1 {
+    font-family: 'Creepster', cursive;
+    font-size: 5rem;
+    margin: 0;
+    color: #e0e0e0;
+    text-shadow: 0 0 10px #ffffff55;
+}
+
+.blood-text {
+    color: #8a0303;
+    text-shadow: 2px 2px 0px #000, 0 0 20px #ff0000;
+    animation: pulse 1s infinite alternate;
+}
+
+@keyframes pulse {
+    from { text-shadow: 0 0 10px #ff0000; }
+    to { text-shadow: 0 0 30px #ff0000; }
+}
+
+.instructions { color: #888; margin: 10px 0; font-size: 1.1rem; }
+
+button {
+    background: transparent;
+    border: 2px solid #eee;
+    color: #eee;
+    padding: 15px 40px;
+    font-size: 1.5rem;
+    font-family: 'Creepster', cursive;
+    cursor: pointer;
+    margin-top: 30px;
+    transition: all 0.3s;
+}
+
+button:hover {
+    background: #eee;
+    color: #000;
+    box-shadow: 0 0 20px #fff;
+}

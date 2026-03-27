@@ -1,0 +1,284 @@
+@import url('https://fonts.googleapis.com/css2?family=Creepster&family=Special+Elite&display=swap');
+
+body {
+    margin: 0;
+    overflow: hidden;
+    background-color: #000;
+    font-family: 'Special Elite', cursive;
+    color: #ddd;
+    user-select: none;
+}
+
+/* --- CURSOR HANDLING --- */
+/* Default crosshair for the game feel */
+body { cursor: crosshair; }
+/* Pointer for interactive elements */
+button, .doll, input { cursor: pointer; }
+
+/* --- HUD --- */
+#ui-hud {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; /* Let clicks pass through HUD */
+    z-index: 60;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.hud-top {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.5rem;
+    color: #a80000;
+    text-shadow: 2px 2px 0 #000;
+}
+
+.sanity-container {
+    position: absolute;
+    bottom: 60px; left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    text-align: center;
+}
+
+.sanity-bar-bg {
+    width: 100%; height: 10px;
+    background: #333;
+    border: 2px solid #555;
+    margin-top: 5px;
+}
+
+#sanity-bar {
+    width: 100%; height: 100%;
+    background: #00ff00;
+    transition: width 0.2s, background 0.2s;
+}
+
+.controls-hint {
+    text-align: center;
+    color: #888;
+    background: rgba(0,0,0,0.5);
+    padding: 5px;
+    border-radius: 5px;
+}
+
+/* --- LAYERS & OVERLAYS --- */
+/* Z-Index Hierarchy:
+   10: Game World
+   30: Dolls (inside game world)
+   35: Lady (inside game world)
+   40: Darkness Overlay (Must allow clicks)
+   50: Damage Overlay
+   60: HUD
+   100: Menus
+*/
+
+#darkness-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 40;
+    pointer-events: none; /* CRITICAL: Allows clicking dolls through darkness */
+    background: radial-gradient(circle at 50% 50%, transparent 100px, #000 250px);
+}
+
+#damage-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 50;
+    pointer-events: none;
+    box-shadow: inset 0 0 0 0 red;
+    transition: box-shadow 0.2s;
+}
+.hurt { box-shadow: inset 0 0 100px 50px rgba(255, 0, 0, 0.5) !important; }
+
+/* --- GAME WORLD --- */
+#game-container {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 10;
+}
+
+#game-world {
+    position: absolute;
+    top: 0; left: 0;
+    height: 100%;
+    width: 4000px; /* The scrollable width */
+    background: linear-gradient(to bottom, #111 0%, #050505 100%);
+    transition: transform 0.1s linear;
+}
+
+.bg-wall {
+    position: absolute; width: 100%; height: 100%; opacity: 0.1;
+    background-image: repeating-linear-gradient(90deg, #333 0px, #333 1px, transparent 1px, transparent 50px);
+}
+
+.prop {
+    position: absolute; bottom: 20%;
+    background: #0a0a0a; border: 4px solid #222;
+}
+.window { width: 150px; height: 200px; bottom: 35%; }
+.door { width: 180px; height: 350px; bottom: 20%; border-color: #333; }
+.painting { width: 100px; height: 140px; bottom: 45%; border-color: #420; }
+.clock { width: 60px; height: 300px; bottom: 20%; background: #151515; }
+
+/* --- ENTITIES --- */
+.doll {
+    position: absolute;
+    width: 40px; height: 60px;
+    background: #aaa;
+    border-radius: 15px;
+    bottom: 25%;
+    z-index: 30; /* Ensure visible */
+    pointer-events: auto; /* Ensure clickable */
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5); /* Glow to make them visible */
+    animation: float 2s infinite ease-in-out;
+}
+.doll::after {
+    content: 'X X'; display: block; text-align: center;
+    margin-top: 15px; font-weight: bold; color: #000;
+}
+.doll:hover {
+    background: #fff;
+    box-shadow: 0 0 20px #fff;
+    transform: scale(1.1);
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.lady {
+    position: absolute;
+    width: 80px; height: 240px;
+    background: #000;
+    bottom: 20%;
+    z-index: 35;
+    opacity: 0;
+    transition: opacity 0.5s;
+    pointer-events: none;
+    filter: blur(3px);
+}
+.lady-visible { opacity: 0.95; }
+.lady::before { /* Head */
+    content: ''; position: absolute; top: 0; left: 10px;
+    width: 60px; height: 60px; background: #111; border-radius: 50%;
+}
+.lady::after { /* Eyes */
+    content: ''; position: absolute; top: 20px; left: 15px;
+    width: 10px; height: 10px; background: red;
+    box-shadow: 25px 0 0 red; border-radius: 50%;
+    animation: blink 4s infinite;
+}
+
+@keyframes blink { 0%, 90%, 100% { opacity: 1; } 95% { opacity: 0; } }
+
+/* --- MENUS --- */
+.screen {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: #080808;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+.hidden { display: none !important; }
+
+.horror-title { font-family: 'Creepster'; font-size: 5rem; color: #a80000; margin: 0; text-shadow: 0 0 20px red; }
+.subtitle { font-size: 1.5rem; color: #666; margin-bottom: 30px; }
+.blood-text { font-family: 'Creepster'; color: red; font-size: 6rem; }
+.instructions { color: #888; margin-bottom: 20px; line-height: 1.6; }
+
+input {
+    padding: 15px; font-size: 1.2rem; background: #111;
+    border: 2px solid #555; color: #fff; width: 250px; text-align: center;
+}
+button {
+    margin-top: 20px; padding: 15px 40px; font-size: 1.5rem;
+    font-family: 'Creepster'; background: transparent;
+    border: 2px solid #a80000; color: #fff; transition: 0.2s;
+}
+button:hover { background: #a80000; box-shadow: 0 0 20px #a80000; }
+
+@import url('https://fonts.googleapis.com/css2?family=Nosifer&family=Roboto+Mono:wght@400;700&display=swap');
+
+body {
+    margin: 0;
+    overflow: hidden;
+    background-color: #000;
+    font-family: 'Roboto Mono', monospace;
+    user-select: none;
+}
+
+#ui-layer {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 10;
+}
+
+#stats {
+    position: absolute; top: 20px; left: 20px;
+    color: #fff; font-size: 1.5rem; text-shadow: 0 0 5px red;
+}
+
+#sanity-box {
+    position: absolute; bottom: 20px; left: 20px;
+    color: #ff3333; font-size: 1.5rem; font-weight: bold;
+    text-shadow: 0 0 10px red;
+}
+
+#crosshair {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 24px;
+}
+
+.overlay {
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: #000;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    z-index: 20; color: #ddd; text-align: center;
+}
+
+.hidden { display: none !important; }
+
+.creepy-text {
+    font-family: 'Nosifer', cursive;
+    font-size: 4rem; color: #a80000;
+    text-shadow: 0 0 20px red; margin-bottom: 20px;
+}
+
+.blood-text {
+    font-family: 'Nosifer', cursive;
+    font-size: 6rem; color: red;
+    text-shadow: 0 0 50px red;
+    animation: shake 0.5s infinite;
+}
+
+button {
+    background: #111; border: 2px solid #a80000; color: #fff;
+    padding: 15px 40px; font-size: 1.5rem; font-family: 'Nosifer';
+    cursor: pointer; margin-top: 30px; transition: 0.2s;
+}
+button:hover { background: #a80000; box-shadow: 0 0 30px red; }
+
+input {
+    background: #222; border: 1px solid #555; padding: 15px;
+    color: #fff; font-family: 'Roboto Mono'; width: 250px;
+    font-size: 1.2rem; text-align: center;
+}
+
+@keyframes shake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
+}

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luminescence - Survival</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="ui-layer">
+        <div id="stats">
+            <div>DEPTH: <span id="level-display">1</span></div>
+            <div>ORBS: <span id="score-display">0/5</span></div>
+        </div>
+        <div id="lives-container">
+            SANITY: <span id="lives-display">❤️❤️❤️</span>
+        </div>
+    </div>
+
+    <div id="start-screen" class="overlay">
+        <h1>LUMINESCENCE</h1>
+        <p>They are coming from the dark.</p>
+        <p class="instructions">Collect <strong>Blue Orbs</strong> to escape.</p>
+        <p class="instructions">You can only survive <strong>5 hits</strong>.</p>
+        <button id="start-btn">ENTER THE DARKNESS</button>
+    </div>
+
+    <div id="game-over-screen" class="overlay hidden">
+        <h1 class="blood-text">SLAUGHTERED</h1>
+        <p>You ran out of sanity.</p>
+        <p>Depth Reached: <span id="final-level">0</span></p>
+        <button id="restart-btn">TRY AGAIN</button>
+    </div>
+
+    <canvas id="gameCanvas"></canvas>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Lady's Manor: Horror Edition</title>
+    <link rel="stylesheet" href="style.css">
+    <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.150.1/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.150.1/examples/jsm/"
+        }
+      }
+    </script>
+</head>
+<body>
+
+    <div id="ui-layer">
+        <div id="stats">
+            <div>LEVEL: <span id="level-display">1</span></div>
+            <div>DOLLS: <span id="dolls-display">0</span> / <span id="dolls-total">5</span></div>
+        </div>
+        <div id="crosshair">+</div>
+        <div id="sanity-box">HEART RATE: <span id="bpm-display">60</span> BPM</div>
+    </div>
+
+    <div id="start-screen" class="overlay">
+        <h1 class="creepy-text">THE LADY'S MANOR</h1>
+        <p><strong>LOUDER. DARKER. SCARIER.</strong></p>
+        <p>Find the Dolls. Avoid the Lady.</p>
+        <p class="controls">WASD to Move | MOUSE to Look | CLICK to Collect</p>
+        <button id="start-btn">WAKE UP</button>
+    </div>
+
+    <div id="quiz-screen" class="overlay hidden">
+        <h2 class="creepy-text">THE SPIRIT BLOCKS THE WAY</h2>
+        <p id="question-text">Loading...</p>
+        <input type="text" id="quiz-input" placeholder="Answer..." autocomplete="off">
+        <button id="submit-answer">SPEAK</button>
+        <p id="quiz-feedback"></p>
+    </div>
+
+    <div id="game-over-screen" class="overlay hidden">
+        <h1 class="blood-text">SHE FOUND YOU</h1>
+        <button id="restart-btn">TRY AGAIN</button>
+    </div>
+
+    <div id="win-screen" class="overlay hidden">
+        <h1 class="creepy-text">ESCAPED</h1>
+        <button id="restart-win-btn">PLAY AGAIN</button>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
